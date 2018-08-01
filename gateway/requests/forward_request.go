@@ -25,5 +25,4 @@ func (f *ForwardRequest) ToURL(addr string, watchdogPort int) string {
 		return fmt.Sprintf("http://%s:%d%s?%s", addr, watchdogPort, f.RawPath, f.RawQuery)
 	}
 	return fmt.Sprintf("http://%s:%d%s", addr, watchdogPort, f.RawPath)
-
 }

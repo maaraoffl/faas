@@ -168,11 +168,22 @@ type FunctionAsHostBaseURLResolver struct {
 
 // Resolve the base URL for a request
 func (f FunctionAsHostBaseURLResolver) Resolve(r *http.Request) string {
-	svcName := getServiceName(r.URL.Path)
 
 	const watchdogPort = 8080
 	var suffix string
-	if len(f.FunctionSuffix) > 0 {
+
+	svcName := getServiceName(r.URL.Path)
+
+	namespace, ok := r.URL.Query()["namespace"]
+
+	funcSuffixSansDefaultNs := strings.Split(f.FunctionSuffix, ".")[1:]
+
+	if ok {
+		suffix = fmt.Sprintf(".%s.%s",
+			namespace[0],
+			strings.Join(funcSuffixSansDefaultNs, "."),
+		)
+	} else if len(f.FunctionSuffix) > 0 {
 		suffix = "." + f.FunctionSuffix
 	}
 
